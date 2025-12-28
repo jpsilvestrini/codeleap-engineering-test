@@ -1,4 +1,4 @@
-export default function Home() {
+export default function Page() {
   return (
     <main className="min-h-screen flex justify-center items-center">
       <div className="bg-white border border-[#CCCCCC] rounded-4xl w-full max-w-125 p-6">
@@ -6,5 +6,5 @@ export default function Home() {
         <div></div>
       </div>
     </main>
-  )
+  );
 }
