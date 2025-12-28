@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,13 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const FormSchema = z.object({
-  username: z.string().min(2).max(12),
+  username: z
+    .string()
+    .min(2, { error: "Username must be between 2 and 12 characters" })
+    .max(12, { error: "Username must be between 2 and 12 characters" }),
 });
 
 export function SignUpForm() {
@@ -26,9 +29,9 @@ export function SignUpForm() {
   });
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
-    console.log(values)
+    console.log(values);
 
-    redirect(`/api/signup?username=${values.username}`)
+    redirect(`/api/signup?username=${values.username}`);
   };
 
   const username = form.watch("username");
@@ -41,7 +44,9 @@ export function SignUpForm() {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[16px] font-normal">Please enter your username</FormLabel>
+              <FormLabel className="text-[16px] font-normal">
+                Please enter your username
+              </FormLabel>
               <FormControl>
                 <Input placeholder="John Doe" {...field} />
               </FormControl>
@@ -50,7 +55,13 @@ export function SignUpForm() {
           )}
         />
         <div className="flex items-center justify-end gap-2.5">
-          <Button disabled={!username} variant={!username ? "default" : "secondary"} type="submit">ENTER</Button>
+          <Button
+            disabled={!username}
+            variant={!username ? "default" : "secondary"}
+            type="submit"
+          >
+            ENTER
+          </Button>
         </div>
       </form>
     </Form>

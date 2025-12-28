@@ -1,12 +1,12 @@
-import { SignUpForm } from "@/components/forms/signup-form";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { SignUpForm } from "@/components/forms/signup-form";
 
 export default async function Page() {
   const jar = await cookies();
   const session = jar.get("session");
 
-  if(session) return redirect("/")
+  if (session) return redirect("/");
 
   return (
     <main className="min-h-screen flex justify-center items-center">

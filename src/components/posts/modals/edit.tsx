@@ -1,16 +1,15 @@
 "use client";
 
+import { Edit } from "lucide-react";
+import { useState } from "react";
 import { PostEdit } from "@/components/forms/post-edit";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Edit } from "lucide-react";
-import { useState } from "react";
 
 export default function EditModal({ postId }: { postId: number }) {
   const [modalShow, setModalShow] = useState(false);

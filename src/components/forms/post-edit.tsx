@@ -1,20 +1,40 @@
-'use client'
+"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Button } from "../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const FormSchema = z.object({
-  title: z.string().min(5).max(30),
-  content: z.string().min(10).max(500),
+  title: z
+    .string()
+    .min(5, { error: "Title must be between 5 and 30 characters" })
+    .max(30, { message: "Title must be between 5 and 30 characters" }),
+  content: z
+    .string()
+    .min(10, { error: "Content must be between 10 and 500 characters" })
+    .max(500, { message: "Content must be between 10 and 500 characters" }),
 });
 
-export function PostEdit({ setModalShow, postId }: { setModalShow: (show: boolean) => void; postId: number }) {
+export function PostEdit({
+  setModalShow,
+  postId,
+}: {
+  setModalShow: (show: boolean) => void;
+  postId: number;
+}) {
   const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -37,7 +57,9 @@ export function PostEdit({ setModalShow, postId }: { setModalShow: (show: boolea
     onSuccess: () => {
       form.reset();
       queryClient.invalidateQueries({ queryKey: ["list"] });
-      setModalShow(false)
+
+      toast.success("Post updated successfully");
+      setModalShow(false);
     },
   });
 
@@ -77,10 +99,18 @@ export function PostEdit({ setModalShow, postId }: { setModalShow: (show: boolea
           )}
         />
         <div className="flex items-center justify-end gap-2.5">
-          <Button type="button" onClick={() => setModalShow(false)}>Cancel</Button>
-          <Button type="submit">Save</Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setModalShow(false)}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" className="bg-green-500 hover:bg-green-500/80">
+            Save
+          </Button>
         </div>
       </form>
     </Form>
-  )
+  );
 }

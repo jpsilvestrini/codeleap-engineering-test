@@ -1,7 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCookies } from "next-client-cookies";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type z from "zod";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -12,23 +17,15 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { useCookies } from "next-client-cookies";
-import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-const FormSchema = z.object({
-  title: z.string().min(5).max(30),
-  content: z.string().min(10).max(500),
-});
+import { PostFormSchema } from "./post-form.schema";
 
 export function PostForm() {
   const cookies = useCookies();
   const user = cookies.get("session");
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof PostFormSchema>>({
+    resolver: zodResolver(PostFormSchema),
     defaultValues: { title: "", content: "" },
   });
 
@@ -36,7 +33,7 @@ export function PostForm() {
   const content = form.watch("content");
 
   const { mutate } = useMutation({
-    mutationFn: (values: z.infer<typeof FormSchema>) => {
+    mutationFn: (values: z.infer<typeof PostFormSchema>) => {
       return fetch("https://dev.codeleap.co.uk/careers/", {
         method: "POST",
         body: JSON.stringify({
@@ -51,10 +48,12 @@ export function PostForm() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["list"] });
+
+      toast.success("Post created successfully");
     },
   });
 
-  const onSubmit = (values: z.infer<typeof FormSchema>) => {
+  const onSubmit = (values: z.infer<typeof PostFormSchema>) => {
     console.log(values);
 
     mutate(values);

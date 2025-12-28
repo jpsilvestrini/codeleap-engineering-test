@@ -1,8 +1,9 @@
 "use client";
 
-import { cacheOptions, getData } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "motion/react";
 import { useCookies } from "next-client-cookies";
+import { cacheOptions, getData } from "@/lib/api";
 import DeleteModal from "./modals/delete";
 import EditModal from "./modals/edit";
 
@@ -34,31 +35,39 @@ export function PostList() {
   return (
     <div>
       {data?.results.map((post) => (
-        <div
-          key={post.id}
-          className="border border-[#999999] rounded-2xl space-y-6"
-        >
-          <div className="bg-[#7695EC] p-6 rounded-t-2xl flex justify-between items-center">
-            <h1 className="text-white font-bold text-[22px]">{post.title}</h1>
-            {user === post.username && (
-              <div className="flex gap-2 items-center">
-                <DeleteModal postId={post.id} />
-                <EditModal postId={post.id} />
-              </div>
-            )}
-          </div>
-          <div className="p-6 space-y-4">
-            <div className="flex justify-between items-center">
-              <p className="text-[#777777] font-bold text-lg">
-                @{post.username}
-              </p>
-              <span className="text-[#777777] text-lg font-normal">
-                {timeAgo(new Date(post.created_datetime))}
-              </span>
+        <AnimatePresence key={post.id}>
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{
+              scale: 0.9,
+              opacity: 0,
+              transition: { ease: [0.4, 0, 0.3, 1], duration: 0.3 },
+            }}
+            className="border border-[#999999] rounded-2xl space-y-6"
+          >
+            <div className="bg-[#7695EC] p-6 rounded-t-2xl flex justify-between items-center">
+              <h1 className="text-white font-bold text-[22px]">{post.title}</h1>
+              {user === post.username && (
+                <div className="flex gap-2 items-center">
+                  <DeleteModal postId={post.id} />
+                  <EditModal postId={post.id} />
+                </div>
+              )}
             </div>
-            <p className="text-lg font-normal">{post.content}</p>
-          </div>
-        </div>
+            <div className="p-6 space-y-4">
+              <div className="flex justify-between items-center">
+                <p className="text-[#777777] font-bold text-lg">
+                  @{post.username}
+                </p>
+                <span className="text-[#777777] text-lg font-normal">
+                  {timeAgo(new Date(post.created_datetime))}
+                </span>
+              </div>
+              <p className="text-lg font-normal">{post.content}</p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       ))}
     </div>
   );

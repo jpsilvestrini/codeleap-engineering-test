@@ -1,5 +1,8 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Trash } from "lucide-react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,13 +13,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash } from "lucide-react";
 
 export default function DeleteModal({ postId }: { postId: number }) {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: (postId: number) => {
       return fetch(`https://dev.codeleap.co.uk/careers/${postId}/`, {
         method: "DELETE",
@@ -24,6 +25,8 @@ export default function DeleteModal({ postId }: { postId: number }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["list"] });
+
+      toast.success("Post deleted successfully");
     },
   });
 

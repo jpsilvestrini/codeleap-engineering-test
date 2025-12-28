@@ -1,12 +1,12 @@
-import { MainSection } from "@/components/main-section";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { MainSection } from "@/components/main-section";
 
 export default async function Home() {
   const jar = await cookies();
   const session = jar.get("session");
 
-  if(!session) return redirect("/signup")
+  if (!session) return redirect("/signup");
 
   return (
     <main className="min-h-screen flex justify-center items-center">

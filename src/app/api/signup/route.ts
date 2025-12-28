@@ -15,6 +15,6 @@ export async function GET(req: Request) {
     redirect("/signup");
   }
 
-  jar.set("session", searchParams.get("username")!)
-  redirect("/")
+  jar.set("session", searchParams.get("username")!);
+  redirect("/");
 }
