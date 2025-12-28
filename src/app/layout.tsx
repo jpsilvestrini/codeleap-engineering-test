@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { CookiesProvider } from "next-client-cookies/server";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import Providers from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
 });
 
@@ -23,12 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <CookiesProvider>
+      <html lang="en">
+        <body className={cn("antialiased bg-[#DDDDDD]", inter.className)}>
+          <Providers>{children}</Providers>
+          <Toaster position="top-center" />
+        </body>
+      </html>
+    </CookiesProvider>
   );
 }
