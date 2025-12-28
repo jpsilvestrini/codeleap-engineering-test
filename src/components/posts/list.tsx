@@ -1,8 +1,8 @@
 "use client";
 
-import { userStore } from "@/common/user";
 import { cacheOptions, getData } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
+import { useCookies } from "next-client-cookies";
 
 interface Post {
   count: number;
@@ -18,7 +18,9 @@ interface Post {
 }
 
 export function PostList() {
-  const user = userStore();
+  const cookies = useCookies();
+  const user = cookies.get("session");
+
   const { data, isLoading, error } = useQuery<Post>({
     queryFn: () => getData(),
     queryKey: ["list"],
@@ -36,7 +38,7 @@ export function PostList() {
         >
           <div className="bg-[#7695EC] p-6 rounded-t-2xl flex justify-between items-center">
             <h1 className="text-white font-bold text-[22px]">{post.title}</h1>
-            {user?.username === post.username && (
+            {user === post.username && (
               <button className="bg-white text-[#7695EC] font-bold text-lg rounded-full px-4 py-2">Edit</button>
             )}
           </div>

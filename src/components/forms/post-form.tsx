@@ -1,7 +1,6 @@
-"use client";
+'use client'
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import z from "zod";
 import {
   Form,
@@ -14,10 +13,12 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { userStore } from "@/common/user";
+import { useCookies } from "next-client-cookies";
+import { useForm } from "react-hook-form";
 
 export function PostForm() {
-  const user = userStore();
+  const cookies = useCookies();
+  const user = cookies.get("session");
   const FormSchema = z.object({
     title: z.string().min(5).max(30),
     content: z.string().min(10).max(500),
@@ -34,7 +35,7 @@ export function PostForm() {
     fetch("https://dev.codeleap.co.uk/careers/", {
       method: "POST",
       body: JSON.stringify({
-        username: user?.username,
+        username: user,
         title: values.title,
         content: values.content,
       }),
