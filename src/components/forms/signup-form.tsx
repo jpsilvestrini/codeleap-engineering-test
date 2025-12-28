@@ -1,6 +1,5 @@
 "use client";
 
-import { userStore } from "@/common/user";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -21,7 +20,6 @@ const FormSchema = z.object({
 });
 
 export function SignUpForm() {
-  const route = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: { username: "" },
@@ -30,8 +28,7 @@ export function SignUpForm() {
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
     console.log(values)
 
-    userStore.setState({ username: values.username })
-    route.push("/")
+    redirect(`/api/signup?username=${values.username}`)
   };
 
   const username = form.watch("username");

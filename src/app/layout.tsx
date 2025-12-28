@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { cn } from "@/lib/utils";
+import { CookiesProvider } from "next-client-cookies/server";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn("antialiased bg-[#DDDDDD]", inter.className)}>
-        <Providers>{children}</Providers>
-      </body>
-    </html>
+    <CookiesProvider>
+      <html lang="en">
+        <body className={cn("antialiased bg-[#DDDDDD]", inter.className)}>
+          <Providers>{children}</Providers>
+        </body>
+      </html>
+    </CookiesProvider>
   );
 }

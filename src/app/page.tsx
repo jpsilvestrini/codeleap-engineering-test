@@ -1,17 +1,12 @@
-'use client'
-
-import { userStore } from "@/common/user";
 import { MainSection } from "@/components/main-section";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  const user = userStore();
-  const router = useRouter();
+export default async function Home() {
+  const jar = await cookies();
+  const session = jar.get("session");
 
-  useEffect(() => {
-    if (!user?.username) router.push("/signup");
-  }, [user]);
+  if(!session) return redirect("/signup")
 
   return (
     <main className="min-h-screen flex justify-center items-center">
