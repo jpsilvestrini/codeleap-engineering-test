@@ -14,8 +14,10 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { userStore } from "@/common/user";
 
 export function PostForm() {
+  const user = userStore();
   const FormSchema = z.object({
     title: z.string().min(5).max(30),
     content: z.string().min(10).max(500),
@@ -28,6 +30,20 @@ export function PostForm() {
 
   const onSubmit = (values: z.infer<typeof FormSchema>) => {
     console.log(values);
+
+    fetch("https://dev.codeleap.co.uk/careers/", {
+      method: "POST",
+      body: JSON.stringify({
+        username: user?.username,
+        title: values.title,
+        content: values.content,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+
+    form.reset();
   };
 
   return (

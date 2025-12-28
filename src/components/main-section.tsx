@@ -9,8 +9,8 @@ export function MainSection() {
       <div className="border rounded-2xl py-7 px-9 space-y-6">
         <h3 className="text-2xl font-bold">What’s on your mind?</h3>
         <PostForm />
-        <PostList />
       </div>
+      <PostList />
     </div>
   );
 }
