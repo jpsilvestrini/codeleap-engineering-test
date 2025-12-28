@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { cn } from "@/lib/utils";
 import { CookiesProvider } from "next-client-cookies/server";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={cn("antialiased bg-[#DDDDDD]", inter.className)}>
           <Providers>{children}</Providers>
+          <Toaster />
         </body>
       </html>
     </CookiesProvider>

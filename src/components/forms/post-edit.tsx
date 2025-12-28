@@ -1,20 +1,12 @@
-"use client";
+'use client'
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import z from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { useCookies } from "next-client-cookies";
-import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const FormSchema = z.object({
@@ -22,25 +14,18 @@ const FormSchema = z.object({
   content: z.string().min(10).max(500),
 });
 
-export function PostForm() {
-  const cookies = useCookies();
-  const user = cookies.get("session");
+export function PostEdit({ setModalShow, postId }: { setModalShow: (show: boolean) => void; postId: number }) {
   const queryClient = useQueryClient();
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: { title: "", content: "" },
   });
 
-  const title = form.watch("title");
-  const content = form.watch("content");
-
   const { mutate } = useMutation({
-    mutationFn: (values: z.infer<typeof FormSchema>) => {
-      return fetch("https://dev.codeleap.co.uk/careers/", {
-        method: "POST",
+    mutationFn: async (values: z.infer<typeof FormSchema>) => {
+      await fetch(`https://dev.codeleap.co.uk/careers/${postId}/`, {
+        method: "PATCH",
         body: JSON.stringify({
-          username: user,
           title: values.title,
           content: values.content,
         }),
@@ -50,7 +35,9 @@ export function PostForm() {
       });
     },
     onSuccess: () => {
+      form.reset();
       queryClient.invalidateQueries({ queryKey: ["list"] });
+      setModalShow(false)
     },
   });
 
@@ -58,8 +45,6 @@ export function PostForm() {
     console.log(values);
 
     mutate(values);
-
-    form.reset();
   };
 
   return (
@@ -92,15 +77,10 @@ export function PostForm() {
           )}
         />
         <div className="flex items-center justify-end gap-2.5">
-          <Button
-            type="submit"
-            disabled={!title || !content}
-            variant={!title || !content ? "secondary" : "default"}
-          >
-            Create
-          </Button>
+          <Button type="button" onClick={() => setModalShow(false)}>Cancel</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </Form>
-  );
+  )
 }
