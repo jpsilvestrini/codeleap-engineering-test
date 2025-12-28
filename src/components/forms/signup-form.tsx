@@ -57,7 +57,7 @@ export function SignUpForm() {
         <div className="flex items-center justify-end gap-2.5">
           <Button
             disabled={!username}
-            variant={!username ? "default" : "secondary"}
+            variant={!username ? "secondary" : "default"}
             type="submit"
           >
             ENTER
